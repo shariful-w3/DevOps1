@@ -47,14 +47,14 @@ jobs:
           ssh-keyscan -H 103.174.50.131 >> ~/.ssh/known_hosts
           echo "🔐 SSH key and known_hosts set up."
 
-      - name: Deploy to server via SCP
-        run: |
-          scp -i ~/.ssh/id_rsa jar/*.jar root@103.174.50.131:/root/OpsCICD/executables/
-        env:
-          SSH_AUTH_SOCK: /dev/null
+      # - name: Deploy to server via SCP
+      #   run: |
+      #     scp -i ~/.ssh/id_rsa jar/*.jar root@103.174.50.131:/root/OpsCICD/executables/
+      #   env:
+      #     SSH_AUTH_SOCK: /dev/null
 
-      - name: Restart server service
+      - name: Making a test repo in remote server
         run: |
-          ssh -i ~/.ssh/id_rsa root@103.174.50.131 'sudo systemctl restart your-app.service'
+          ssh -i ~/.ssh/id_rsa root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
         env:
           SSH_AUTH_SOCK: /dev/null
