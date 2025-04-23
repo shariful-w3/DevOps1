@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy to server via SCP
         run: |
-          chmod -R 755 /root/jar
+          chmod -R 777 /root/jar
           mkdir -p /root/jar/test-ops
 
       - name: Restart server process (optional)
