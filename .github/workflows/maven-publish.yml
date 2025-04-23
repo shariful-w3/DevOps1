@@ -22,43 +22,12 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
-      # - name: Upload JAR
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: app-jar
-      #     path: target/*.jar
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Download JAR
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: app-jar
-      #     path: jar/
-
-      - name: Set up SSH key and known hosts
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 103.174.50.131 >> ~/.ssh/known_hosts
-          echo "🔐 SSH key and known_hosts set up."
-
-      # - name: Deploy to server via SCP
-      #   run: |
-      #     scp -i ~/.ssh/id_rsa jar/*.jar root@103.174.50.131:/root/OpsCICD/executables/
-      #   env:
-      #     SSH_AUTH_SOCK: /dev/null
-
-      - name: Validate Remote SSH key
-        run: |
-          ssh-keygen -y -f ~/.ssh/id_rsa || echo "🔴 Invalid SSH private key"
-    
-      - name: Making a test directory in remote server
-        run: |
-          ssh -i ~/.ssh/id_rsa root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
-        env:
-          SSH_AUTH_SOCK: /dev/null
+      - name: Run remote command using sshpass
+              run: |
+                sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
