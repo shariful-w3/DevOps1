@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy to server via SCP
         run: |
-          echo "some text printing"
+          echo $PWD
 
       - name: Restart server process (optional)
         run: |
