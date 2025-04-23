@@ -33,11 +33,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download JAR
-        uses: actions/download-artifact@v3
-        with:
-          name: app-jar
-          path: jar/
+      # - name: Download JAR
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: app-jar
+      #     path: jar/
 
       - name: Set up SSH key and known hosts
         run: |
