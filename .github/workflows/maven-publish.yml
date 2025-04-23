@@ -3,7 +3,7 @@ name: Build and Deploy from Dev Branch
 on:
   push:
     branches:
-      - dev  # Only trigger on push to dev branch
+      - main  # Only trigger on push to dev branch
 
 jobs:
   build:
