@@ -29,5 +29,5 @@ jobs:
 
     steps:
       - name: Run remote command using sshpass
-              run: |
-                sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
+        run: |
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
