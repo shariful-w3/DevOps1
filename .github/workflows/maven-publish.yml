@@ -24,6 +24,7 @@ jobs:
 
 
   deploy:
+    needs: build
     runs-on: ubuntu-latest
 
     steps:
@@ -44,10 +45,10 @@ jobs:
 
       - name: Copy JAR to remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar root@103.174.50.131:/root/OpsCICD/app.jar
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
       - name: Kill process on port 8081 (if any)
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@103.174.50.131 '
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
             PID=$(lsof -ti:8081)
             if [ -n "$PID" ]; then
               echo "Killing process on port 8081: $PID"
@@ -59,4 +60,4 @@ jobs:
 
       - name: Run the JAR on remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no root@103.174.50.131 'nohup java -jar /root/OpsCICD/app.jar > /root/OpsCICD/app.log 2>&1 &'
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" 'nohup java -jar /root/OpsCICD/app.jar > /root/OpsCICD/app.log 2>&1 &'
