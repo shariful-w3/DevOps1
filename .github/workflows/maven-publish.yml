@@ -42,7 +42,7 @@ jobs:
 
       - name: Deploy to server via SCP
         run: |
-          scp -i ~/.ssh/id_rsa *.jar root@103.174.50.131:/root/OpsCICD/executables/
+          scp -i ~/.ssh/id_rsa /jar*.jar root@103.174.50.131:/root/OpsCICD/executables/
 
       - name: Restart server process (optional)
         run: |
