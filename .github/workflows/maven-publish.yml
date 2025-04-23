@@ -3,10 +3,7 @@ name: Build and Deploy from Dev Branch
 on:
   push:
     branches:
-      - main  # Make sure this matches your branch name
-
-permissions:
-  contents: read  # Required for downloading GitHub-hosted actions
+      - dev
 
 jobs:
   build:
@@ -25,26 +22,39 @@ jobs:
       - name: Build with Maven
         run: mvn clean package -DskipTests
 
+      - name: Upload JAR
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-jar
+          path: target/*.jar
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code (optional but safe)
-        uses: actions/checkout@v3
+      - name: Download JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: app-jar
+          path: jar/
 
-      - name: Set up SSH key
+      - name: Set up SSH key and known hosts
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keygen -y -f ~/.ssh/id_rsa > /dev/null || echo "🔴 Invalid SSH key!"
           ssh-keyscan -H 103.174.50.131 >> ~/.ssh/known_hosts
+          echo "🔐 SSH key and known_hosts set up."
 
       - name: Deploy to server via SCP
         run: |
-          echo $PWD
+          scp -i ~/.ssh/id_rsa jar/*.jar root@103.174.50.131:/root/OpsCICD/executables/
+        env:
+          SSH_AUTH_SOCK: /dev/null
 
-      - name: Restart server process (optional)
+      - name: Restart server service
         run: |
-          ssh -i ~/.ssh/id_rsa root@103.174.50.131 'echo $PWD'
+          ssh -i ~/.ssh/id_rsa root@103.174.50.131 'sudo systemctl restart your-app.service'
+        env:
+          SSH_AUTH_SOCK: /dev/null
