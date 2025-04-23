@@ -12,7 +12,7 @@ public class WelcomeController {
 
 		model.addAttribute("title", "Title: DevOps Service");
 		model.addAttribute("pageTitle", "Page Title: DevOps Service");
-		model.addAttribute("msg", "Msg: Welcome To DepOps CI/CD pipeline demo, Commit 23!");
+		model.addAttribute("msg", "Msg: Welcome To DepOps CI/CD pipeline demo, Commit 55!");
 
 		model.addAttribute("msg2", "Msg2: Welcome To DepOps CI/CD pipeline demo!");
 
