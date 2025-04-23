@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main  # Only trigger on push to dev branch
-
+      
+permissions:
+  contents: read 
+  
 jobs:
   build:
     runs-on: ubuntu-latest
