@@ -25,7 +25,7 @@ jobs:
 
       - name: Deploy to server via SCP
         run: |
-          mkdir -p /root/jar/test-ops
+          echo "some text printing"
 
       - name: Restart server process (optional)
         run: |
