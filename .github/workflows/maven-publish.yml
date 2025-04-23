@@ -53,7 +53,11 @@ jobs:
       #   env:
       #     SSH_AUTH_SOCK: /dev/null
 
-      - name: Making a test repo in remote server
+      - name: Validate Remote SSH key
+        run: |
+          ssh-keygen -y -f ~/.ssh/id_rsa || echo "🔴 Invalid SSH private key"
+    
+      - name: Making a test directory in remote server
         run: |
           ssh -i ~/.ssh/id_rsa root@103.174.50.131 'mkdir -p /root/OpsCICD/test-folder'
         env:
