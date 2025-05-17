@@ -51,15 +51,15 @@ jobs:
         run: |
           scp -i private_key.pem -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
   
-      - name: Kill process on port 8081 (if any)
+      - name: Kill process on port 8082 (if any)
         run: |
           ssh -i private_key.pem -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
-            PID=$(lsof -ti:8081)
+            PID=$(lsof -ti:8082)
             if [ -n "$PID" ]; then
-              echo "Killing process on port 8081: $PID"
+              echo "Killing process on port 8082: $PID"
               kill -9 $PID
             else
-              echo "No process running on port 8081."
+              echo "No process running on port 8082."
             fi
           '
   
