@@ -26,34 +26,29 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-  
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-  
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'  # Adjust based on your project
-  
+
       - name: Build the JAR using Maven
         run: mvn clean package -DskipTests
-  
-      - name: Set up SSH key and known hosts
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 600 private_key.pem
-          mkdir -p ~/.ssh
-          ssh-keyscan -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
-  
+
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
       - name: Copy JAR to remote server
         run: |
-          scp -i private_key.pem -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
-  
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
       - name: Kill process on port 8082 (if any)
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
             PID=$(lsof -ti:8082)
             if [ -n "$PID" ]; then
               echo "Killing process on port 8082: $PID"
@@ -62,12 +57,7 @@ jobs:
               echo "No process running on port 8082."
             fi
           '
-  
+
       - name: Run the JAR on remote server
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
-            nohup java -jar /root/OpsCICD/app.jar > /root/OpsCICD/app.log 2>&1 &
-          '
-  
-      - name: Clean up private key
-        run: rm -f private_key.pem
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" 'nohup java -jar /root/OpsCICD/app.jar > /root/OpsCICD/app.log 2>&1 &'
