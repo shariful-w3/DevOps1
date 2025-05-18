@@ -12,9 +12,8 @@ public class WelcomeController {
 
 		model.addAttribute("title", "Title: DevOps Service");
 		model.addAttribute("pageTitle", "Page Title: DevOps Service");
-		model.addAttribute("msg", "Msg: Welcome To DepOps CI/CD pipeline demo from github, Hello topu");
 
-		model.addAttribute("msg2", "Msg2: Welcome To DepOps CI/CD pipeline demo!");
+		model.addAttribute("msg2", "Msg2: Welcome To DepOps CI/CD pipeline demo! , Hello topu22222");
 
 		return "index";
 	}
