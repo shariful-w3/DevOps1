@@ -38,7 +38,7 @@ sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no targ
 - Create your own workflow file manually.
 
 📁 Example workflow:  
-[.github/workflows/github-ci-cd.yml](./.github/workflows/github-ci-cd.yml)
+[View the GitHub Actions workflow file](https://github.com/shariful-w3/DevOps1/blob/main/.github/workflows/maven-publish.yml)
 
 ---
 
