@@ -35,6 +35,8 @@ A simple and effective CI/CD pipeline using **GitHub Actions** for Java Spring a
 
 ```bash
 ssh-keygen -t rsa -b 4096 -C "shariful.w3@gmail.com" -f ~/.ssh/id_rsa_account1
+```
+</details>
 
 ## ✅ git clone using ssh key
 
@@ -43,7 +45,8 @@ ssh-keygen -t rsa -b 4096 -C "shariful.w3@gmail.com" -f ~/.ssh/id_rsa_account1
 
 ```bash
 git clone git@github.com-account1:shariful-w3/microservices-config.git
-
+```
+</details>
 ## ✅ check if a port is running
 
 <details>
@@ -51,3 +54,5 @@ git clone git@github.com-account1:shariful-w3/microservices-config.git
 
 ```bash
 sudo lsof -i :<PORT>
+```
+</details>
