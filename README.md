@@ -14,6 +14,23 @@ A simple and effective CI/CD pipeline using **GitHub Actions** for Java Spring a
 
 ---
 
+### 🔐 Step 2: Add the Credentials
+
+Go to your GitHub repository:
+
+**Repository → Settings → Secrets and variables → Actions**
+
+There, click **"New repository secret"** and add your credentials. For example:
+
+- `SERVER_PASSWORD`
+- `SERVER_USER`
+- `SERVER_HOST`
+
+You can then use them in your GitHub Actions workflow like this:
+
+```yaml
+sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
+
 ### Step 2: Create GitHub Actions Workflow
 - Go to the **Actions** tab in your repository.
 - Use the predefined template: `Publish Java Package with Maven`, or
