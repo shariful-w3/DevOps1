@@ -66,6 +66,12 @@ git clone git@github.com-account1:shariful-w3/microservices-config.git
 sudo lsof -i :<PORT>
 ```
 
+<summary><strong>Kill a running port</strong></summary>
+
+```bash
+sudo kill -9 $(lsof -t -i:8080)
+```
+
 ## 🧩 Workflow Overview
 
 The GitHub Actions workflow is defined in this file:
