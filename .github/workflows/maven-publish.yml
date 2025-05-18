@@ -59,15 +59,15 @@ jobs:
       - name: Copy JAR to remote server
         run: |
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":"$DEPLOY_DIR/app.jar"
-      - name: Kill process on port $DEPLOY_DIR (if any)
+      - name: Kill process on port 8085 (if any)
         run: |
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
-            PID=$(lsof -ti:$DEPLOY_DIR)
+            PID=$(lsof -ti:8085)
             if [ -n "$PID" ]; then
-              echo "Killing process on port $DEPLOY_DIR: $PID"
+              echo "Killing process on port 8085: $PID"
               kill -9 $PID
             else
-              echo "No process running on port $DEPLOY_DIR."
+              echo "No process running on port 8085."
             fi
           '
 
