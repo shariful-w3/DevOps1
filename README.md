@@ -138,3 +138,60 @@ jobs:
    ```
 
 ---
+
+# 🚀 Deployment & Monitoring Guide
+
+## 📂 Application Log Location
+
+All logs from the deployed application are stored at:
+
+```
+/root/OpsCICD/github/app.log
+```
+
+---
+
+## 🔍 Some Useful `tail` Commands
+
+### 1. **Live Log Monitoring**
+Continuously stream the log file in real time:
+
+```bash
+tail -f /root/OpsCICD/github/app.log
+```
+
+---
+
+### 2. **Read Last 1000 Lines**
+Quickly check the latest 1000 lines of the log:
+
+```bash
+tail -n 1000 /root/OpsCICD/github/app.log
+```
+
+---
+
+### 3. **Search Specific Text in Logs**
+Search for specific log entries:
+
+```bash
+grep 'some search text' /root/OpsCICD/github/app.log
+```
+
+---
+
+### 4. **Live Filtered Log (Real-Time Search)**
+Monitor logs in real-time while filtering for multiple keywords (e.g., `user-authentication` or `USER_WEB_DEV`):
+
+```bash
+tail -f /root/OpsCICD/github/app.log | grep --line-buffered -E "user-authentication|USER_WEB_DEV"
+```
+
+---
+
+## 📌 Tip
+
+- Use `Ctrl+C` to stop any live monitoring (`tail -f`) session.
+- You can modify the search terms as per your debugging needs.
+
+---
