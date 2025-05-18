@@ -65,3 +65,70 @@ git clone git@github.com-account1:shariful-w3/microservices-config.git
 ```bash
 sudo lsof -i :<PORT>
 ```
+
+## 🧩 Workflow Overview
+
+The GitHub Actions workflow is defined in this file:
+🔗 [`.github/workflows/maven-publish.yml`](https://github.com/shariful-w3/DevOps1/blob/main/.github/workflows/maven-publish.yml)
+
+### ✅ Trigger
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+```
+
+> This triggers the workflow **every time code is pushed to the `main` branch**.
+
+---
+
+### 🔨 `build` Job
+
+```yaml
+jobs:
+  build:
+    runs-on: ubuntu-latest
+```
+
+- **Checks out the code**
+- **Sets up JDK 17**
+- **Builds the project with Maven (`mvn clean package -DskipTests`)**
+
+---
+
+### 🚀 `deploy` Job
+
+```yaml
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+```
+
+> Runs only **after the build job** completes successfully.
+
+#### Key Steps:
+
+1. **Setup JDK and Build Again**
+   - Useful if artifacts are needed fresh.
+   
+2. **Install `sshpass`**
+   - Enables non-interactive SSH login using password.
+
+3. **Securely Copy JAR File**
+   ```bash
+   sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp ...
+   ```
+
+4. **Kill Old Process on Port 8085**
+   ```bash
+   lsof -ti:8085 | xargs kill -9
+   ```
+
+5. **Start the New JAR Application**
+   ```bash
+   nohup java -jar ... > app.log &
+   ```
+
+---
