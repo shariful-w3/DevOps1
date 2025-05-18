@@ -45,7 +45,7 @@ jobs:
 
       - name: Copy JAR to remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/github/app.jar
       - name: Kill process on port 8082 (if any)
         run: |
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
@@ -60,4 +60,4 @@ jobs:
 
       - name: Run the JAR on remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" 'nohup java -jar /root/OpsCICD/app.jar > /root/OpsCICD/app.log 2>&1 &'
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" 'nohup java -jar /root/OpsCICD/github/app.jar > /root/OpsCICD/github/app.log 2>&1 &'
