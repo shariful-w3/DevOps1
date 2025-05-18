@@ -56,20 +56,17 @@ jobs:
       #   run: |
       #     sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" "chmod +x $DEPLOY_DIR/run-github-app1.sh && $DEPLOY_DIR/run-github-app1.sh"
           
-      - name: Copy JAR to remote server
+      - name: Kill process on port $DEPLOY_PORT (if any)
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":"$DEPLOY_DIR/app.jar"
-      - name: Kill process on port 8085 (if any)
-        run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
-            PID=$(lsof -ti:8085)
-            if [ -n "$PID" ]; then
-              echo "Killing process on port 8085: $PID"
-              kill -9 $PID
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" "
+            PID=\$(lsof -ti:$DEPLOY_PORT)
+            if [ -n \"\$PID\" ]; then
+              echo \"Killing process on port $DEPLOY_PORT: \$PID\"
+              kill -9 \$PID
             else
-              echo "No process running on port 8085."
+              echo \"No process running on port $DEPLOY_PORT.\"
             fi
-          '
+          "
 
       - name: Run the JAR on remote server
         run: |
