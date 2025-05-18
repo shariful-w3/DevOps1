@@ -30,8 +30,9 @@ You can then use them in your GitHub Actions workflow like this:
 
 ```yaml
 sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/app.jar
+```
 
-### Step 2: Create GitHub Actions Workflow
+### Step 3: Create GitHub Actions Workflow
 - Go to the **Actions** tab in your repository.
 - Use the predefined template: `Publish Java Package with Maven`, or
 - Create your own workflow file manually.
@@ -41,7 +42,7 @@ sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no targ
 
 ---
 
-### Step 3: Copy CI/CD Script
+### Step 4: Copy CI/CD Script
 - Copy the content from the provided `github-ci-cd.yml` file into your workflow directory:
 
 
