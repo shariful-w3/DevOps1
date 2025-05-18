@@ -41,7 +41,9 @@ ssh-keygen -t rsa -b 4096 -C "shariful.w3@gmail.com" -f ~/.ssh/id_rsa_account1
 ```bash
 git clone git@github.com-account1:shariful-w3/microservices-config.git
 ```
+
 <summary><strong>check if a port is running</strong></summary>
+
 ```bash
 sudo lsof -i :<PORT>
 ```
