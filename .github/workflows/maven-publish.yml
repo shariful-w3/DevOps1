@@ -27,6 +27,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    env:
+      DEPLOY_DIR: /root/OpsCICD/github
+      DEPLOY_PORT: 8085
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -42,22 +46,27 @@ jobs:
 
       - name: Install sshpass
         run: sudo apt-get update && sudo apt-get install -y sshpass
-
+        
+      - name: Make deployment directory if not exist
+        run: |
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" "mkdir -p $DEPLOY_DIR"
+        
       - name: Copy JAR to remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":/root/OpsCICD/github/app.jar
-      - name: Kill process on port 8085 (if any)
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" scp -o StrictHostKeyChecking=no target/*.jar "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}":"$DEPLOY_DIR/app.jar"
+      - name: Kill process on port $DEPLOY_DIR (if any)
         run: |
           sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" '
-            PID=$(lsof -ti:8085)
+            PID=$(lsof -ti:$DEPLOY_DIR)
             if [ -n "$PID" ]; then
-              echo "Killing process on port 8085: $PID"
+              echo "Killing process on port $DEPLOY_DIR: $PID"
               kill -9 $PID
             else
-              echo "No process running on port 8085."
+              echo "No process running on port $DEPLOY_DIR."
             fi
           '
 
       - name: Run the JAR on remote server
         run: |
-          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" 'nohup java -jar /root/OpsCICD/github/app.jar > /root/OpsCICD/github/app.log 2>&1 &'
+          sshpass -p "${{ secrets.SERVER_PASSWORD }}" ssh -o StrictHostKeyChecking=no "${{ secrets.SERVER_USER }}"@"${{ secrets.SERVER_HOST }}" "nohup java -jar $DEPLOY_DIR/app.jar > $DEPLOY_DIR/app.log 2>&1 &"
+
